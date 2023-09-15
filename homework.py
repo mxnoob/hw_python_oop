@@ -9,13 +9,6 @@ class InfoMessage:
     speed: float
     calories: float
 
-    def get_message(self) -> str:
-        raise NotImplementedError
-
-
-class TrainingInfoMessage(InfoMessage):
-    """Информационное сообщение о тренировке."""
-
     MESSAGE = ('Тип тренировки: {training_type}; '
                'Длительность: {duration:0.3f} ч.; '
                'Дистанция: {distance:0.3f} км; '
@@ -55,7 +48,7 @@ class Training:
 
     def show_training_info(self) -> InfoMessage:
         """Вернуть информационное сообщение о выполненной тренировке."""
-        return TrainingInfoMessage(
+        return InfoMessage(
             self.__class__.__name__,
             self.duration,
             self.get_distance(),
