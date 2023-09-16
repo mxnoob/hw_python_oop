@@ -1,4 +1,5 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, asdict
+from typing import ClassVar
 
 
 @dataclass
@@ -9,14 +10,14 @@ class InfoMessage:
     speed: float
     calories: float
 
-    MESSAGE = ('Тип тренировки: {training_type}; '
-               'Длительность: {duration:0.3f} ч.; '
-               'Дистанция: {distance:0.3f} км; '
-               'Ср. скорость: {speed:0.3f} км/ч; '
-               'Потрачено ккал: {calories:0.3f}.')
+    MESSAGE: ClassVar[str] = ('Тип тренировки: {training_type}; '
+                              'Длительность: {duration:0.3f} ч.; '
+                              'Дистанция: {distance:0.3f} км; '
+                              'Ср. скорость: {speed:0.3f} км/ч; '
+                              'Потрачено ккал: {calories:0.3f}.')
 
     def get_message(self) -> str:
-        return self.MESSAGE.format(**self.__dict__)
+        return self.MESSAGE.format(**asdict(self))
 
 
 class Training:
@@ -116,11 +117,13 @@ class Swimming(Training):
         return (self.get_mean_speed() + self.OFFSET_SPEED) * multiplayer
 
 
-def read_package(workout_type: str, data: list) -> Training:
+def read_package(workout_type: str,
+                 data: list[tuple[str, list[..., int]]]
+                 ) -> Training:
     """Прочитать данные полученные от датчиков."""
-    training_types: dict = {'SWM': Swimming,
-                            'RUN': Running,
-                            'WLK': SportsWalking}
+    training_types: dict[str: Training] = {'SWM': Swimming,
+                                           'RUN': Running,
+                                           'WLK': SportsWalking}
 
     if training_type := training_types.get(workout_type):
         return training_type(*data)
@@ -134,7 +137,7 @@ def main(training: Training) -> None:
 
 
 if __name__ == '__main__':
-    packages = [
+    packages: list[tuple[str, list[..., int]]] = [
         ('SWM', [720, 1, 80, 25, 40]),
         ('RUN', [15000, 1, 75]),
         ('WLK', [9000, 1, 75, 180]),
