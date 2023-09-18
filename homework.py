@@ -54,7 +54,8 @@ class Training:
             self.duration,
             self.get_distance(),
             self.get_mean_speed(),
-            self.get_spent_calories())
+            self.get_spent_calories()
+        )
 
 
 class Running(Training):
@@ -118,12 +119,14 @@ class Swimming(Training):
 
 
 def read_package(workout_type: str,
-                 data: list[tuple[str, list[..., int]]]
+                 data: list[int]
                  ) -> Training:
     """Прочитать данные полученные от датчиков."""
-    training_types: dict[str: Training] = {'SWM': Swimming,
-                                           'RUN': Running,
-                                           'WLK': SportsWalking}
+    training_types: dict[str: Training] = {
+        'SWM': Swimming,
+        'RUN': Running,
+        'WLK': SportsWalking,
+    }
 
     if training_type := training_types.get(workout_type):
         return training_type(*data)
@@ -137,7 +140,7 @@ def main(training: Training) -> None:
 
 
 if __name__ == '__main__':
-    packages: list[tuple[str, list[..., int]]] = [
+    packages: list[tuple[str, list[int]]] = [
         ('SWM', [720, 1, 80, 25, 40]),
         ('RUN', [15000, 1, 75]),
         ('WLK', [9000, 1, 75, 180]),
